@@ -12,7 +12,7 @@ def hello_world():
     return render_template('hello.html') #Comm2
 
 @app.route("/contact/")
-def mafichecontact():
+def MapremiereAPI():
     return render_template("contact.html")
   
 @app.route('/paris/')
@@ -32,7 +32,7 @@ def mongraphique():
     return render_template("graphique.html")
 
 @app.route("/histogramme/")
-def monhistogramme():
+def monhistogramme1():
     return render_template("histogramme.html")
 
 @app.route("/commits/")
