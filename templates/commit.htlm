@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Graphique des Commits thomloy :</title>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+<body>
+    <div id="chart_div" style="width: 800px; height: _00px;"></div>
+    <script>
+        // Charger la bibliothèque de graphiques Google
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+            // Faire une requête à l'API GitHub
+            fetch('https://api.github.com/repos/OpenRSI/5MCSI_Metriques/commits')
+                .then(response => response.json())
+                .then(data => {
+                    // Traitement des données
+                    const commitData = [];
+                    data.forEach(commit => {
+                        const commitDate = new Date(commit.commit.author.date);
+                        const minutes = commitDate.getMinutes();
+                        commitData.push([minutes, 1]); // Ajouter 1 pour chaque commit à cette minute
+                    });
+
+                    // Préparer les données pour Google Charts
+                    const dataTable = new google.visualization.DataTable();
+                    dataTable.addColumn('number', 'Minute');
+                    dataTable.addColumn('number', 'Commits');
+                    dataTable.addRows(commitData);
+
+                    // Options du graphique
+                    const options = {
+                        title: 'Commits par Minute',
+                        hAxis: {title: 'Minutes', minValue: 0, maxValue: 59},
+                        vAxis: {title: 'Nombre de Commits'},
+                        legend: 'none'
+                    };
+
+                    // Dessiner le graphique
+                    const chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+                    chart.draw(dataTable, options);
+                })
+                .catch(error => console.error('Erreur lors de la récupération des données:', error));
+        }
+    </script>
+</body>
+</html>
